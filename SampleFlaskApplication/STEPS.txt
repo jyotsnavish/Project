@@ -1,0 +1,151 @@
+Create a python flask based web app that supports the following endpoint: /echo
+This should take the query string passed to it as part of the GET request and send an HTML page response with a two column HTML table in the body showing the query parameter names in the left column and their corresponding values in the right column. The response should also include the value of "hostname" as an additional row in the table.
+
+Use rockylinux:9.1-minimal as your base image and include your flask up in your own container image. Use my-flask-echo:v1 as your image tag. You should be able to use docker run with this tag to get the echo server up and running.
+Create a docker compose file (preferably Dockerfile version 1.4). Use "my-echo" as the service in this compose file. You should then be able to do "docker compose up -d" to run your echo server.
+Create a script that force kills process ID 1. Include this script in your container image under "/usr/local/bin".
+You should be able to "exec -it" into your running container and run this script to kill the container. Modify your compose file to use the "unless-stopped" restart policy. Explore how to bind mount a volume.
+
+docker pull
+docker exec
+docker commit
+
+
+https://www.techrepublic.com/article/how-to-use-rocky-linux-as-a-docker-container-image/
+
+https://www.golinuxcloud.com/flask-template/#:~:text=Jinja2%20is%20the%20template%20engine%20used%20in%20flask%2C,be%20required%20in%20order%20for%20flask%20to%20run.
+
+
+####insatll docker desktop####
+cmd > https://www.digitalocean.com/community/tutorials/how-to-install-and-use-docker-on-rocky-linux-8
+
+docker run -it rockylinux:9.1.20230215-minimal
+docker container prune -f
+docker rm container_name -f
+#rename image
+docker tag 2d20a2410c4b my-echo-server-container-approach:v1
+
+
+####By entering into the rockylinux image which was pulled####
+
+docker pull rockylinux:9.1.20230215-minimal
+docker images
+docker run -it --name rlinux -p 5000:5000 -d rockylinux:9.1.20230215-minimal 
+docker exec -it --user root rlinux /bin/bash
+
+su -
+microdnf upgrade
+microdnf install dnf
+dnf update -y
+python3 -V
+dnf install python-pip
+pip3 -V
+pip install flask
+dnf install ncurses (clear cmnd)
+dnf install net-tools
+dnf install procps
+
+copy the flask code
+mkdir flaskapp
+main.py templates/echo.html
+
+python main.py
+
+sudo docker commit 459c757823c7 my-flask-echo:v1
+docker images
+docker run -it --name echo-server -p 5000:5000 -d my-flask-echo:v1 
+docker exec -it --user root echo-server /bin/bash
+
+-it > interactive terminal
+
+
+#####Using Dockerfile####
+
+python3 -m pip freeze > requirements.txt
+
+docker build -t my-flask-echo-image:v1 .
+docker run -it --name echo-server-dockerfile -p 5000:5000 -d my-flask-echo-image:v1
+
+####Docker Compose####
+
+flaskapp>echo-server>docker-compose.yaml
+docker inspect image-id
+docker compose down
+#to build the images
+docker-compse -f docker-compose.yml build 
+#running svc in detach mode with option d
+docker compose up -d (docker compose up -d)				
+docker-compose -f docker-compose.yml up -d
+
+
+####ERROR FACED####
+ => ERROR [internal] load metadata for docker.io/library/rockylinux:9.1.20230215-minimal                                                                                                                                               25.3s
+------
+ > [internal] load metadata for docker.io/library/rockylinux:9.1.20230215-minimal:
+------
+failed to solve: rpc error: code = Unknown desc = failed to solve with frontend dockerfile.v0: failed to create LLB definition: failed to authorize: rpc error: code = Unknown desc = failed to fetch anonymous token: Get "https://auth.docker.io/token?scope=repository%3Alibrary%2Frockylinux%3Apull&service=registry.docker.io": net/http: TLS handshake timeout
+
+
+Solution >
+windows docker desktop > setting > docker engine >set buildkit=false > apply and restart
+
+
+WARNING: Retrying (Retry(total=4, connect=None, read=None, redirect=None, status=None)) after connection broken by 'ConnectTimeoutError(<pip._vendor.urllib3.connection.HTTPSConnection object at 0x7f90e9d804c0>, 'Connection to p
+ => => # ypi.org timed out. (connect timeout=15)')': /simple/click/
+ 
+removed  click from requiremmet.txt
+
+####git and github#### 
+https://www.youtube.com/watch?v=gwWKnnCMQ5c
+
+
+install git 
+cd path (ex. C:\Users\Admin\Documents\Docker)
+open gitbash from right click
+
+#configure
+git config --global user.name "jyotsnavish"
+git config --global user.email "jyotsana.vish98@gmail.com"
+
+git config --global user.name
+git config --global user.email
+g
+git init
+ls -lart
+git add .
+git status
+git commit (enter msg) or git commit -m "Initial Commit"
+git log
+git branch
+
+#recover file
+git checkout filename
+
+#compare staging area to current dir
+git diff
+git diff -f
+
+#communication from your machine to github
+#generate ssh key and paste it in github>setting>gpg and ssh
+ssh-keygen -t rsa -b 4096 -C "jyotsana.vish98@gmail.com"
+eval $(ssh-agent -s)
+ssh-add ~/.ssh/id_rsa
+cat ~/.ssh/id_rsa.pub > copy and paste
+
+git remote add origin git@github.com:jyotsnavish/Projects.git
+git push -u origin master
+git remote remove origin
+git remote -v
+
+****
+git branch -M main
+git fetch
+git push -u origin main
+****
+
+After modifying anything in the folder >
+git status (check if anything changed)
+git add .
+git commit -m "message"
+git push -u origin main
+
