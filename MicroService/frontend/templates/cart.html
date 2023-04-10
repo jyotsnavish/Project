@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{%block pageContent%}
+<div class="container">
+    <div class="container-fluid">
+        <h1>Your Shopping Cart</h1>
+
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>Book Title</th>
+                <th>Price</th>
+                <th>Quantity</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% if cart_items | length > 0 %}
+            {% for item in cart_items %}
+
+            {% set url = "/book/" + item.book.slug %}
+            <tr>
+                <td><a href="{{ url }}">{{ item.book.name }}</a></td>
+                <td>{{ item.book.price }}</td>
+                <td>{{ item.quantity }}</td>
+            </tr>
+            {% endfor %}
+            {% else %}
+            <tr>
+                <td colspan="3">
+                    <strong>No books found.</strong>
+                </td>
+            </tr>
+
+            {% endif %}
+
+            </tbody>
+            <tfoot>
+            <tr class="table-dark">
+                <td colspan="2">Total</td>
+                <td> {{ total_price }}</td>
+            </tr>
+            </tfoot>
+        </table>
+        {% if total_price > 0 %}
+
+        <a href="/checkout" class="btn btn-lg btn-outline-secondary">Checkout
+        </a>
+
+        {% endif %}
+    </div>
+</div>
+{%endblock%}

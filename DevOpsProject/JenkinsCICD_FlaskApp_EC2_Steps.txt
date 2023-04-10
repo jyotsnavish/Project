@@ -1,0 +1,106 @@
+CI CD Pipeline using Flask app
+
+https://www.youtube.com/watch?v=nplH3BzKHPk&list=PLlfy9GnSVerRqYJgVYO0UiExj5byjrW8u&index=15
+
+EC2 > Jenkins > Github repo > Integration of Jenkins and GitHub(ssh) > Excute App using dockerfile via Jenkins (build steps) > Webhook configure  so that github send trigger if any changes on it to jenkins (build trigger)
+
+#Install Jenkins
+
+#EC2 ubuntu
+https://www.trainwithshubham.com/blog/install-jenkins-on-aws
+
+sudo apt update
+sudo apt install openjdk-11-jre
+java -version
+curl -fsSL https://pkg.jenkins.io/debian/jenkins.io.key | sudo tee \   /usr/share/keyrings/jenkins-keyring.asc > /dev/null 
+echo deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc] \   https://pkg.jenkins.io/debian binary/ | sudo tee \   /etc/apt/sources.list.d/jenkins.list > /dev/null
+sudo apt-get update 
+sudo apt-get install jenkins
+sudo systemctl enable jenkins
+sudo systemctl start jenkins
+sudo systemctl status jenkins
+
+In SG > open port 8080(default port for jenkins) againts your ip
+http://public_ip_server:8080
+for password > /var/lib/jenkins/secrets/initialAdminPassword > enter password > install suggested plugins
+
+#access jenkins from browser
+admin
+admin@123 
+http://18.234.255.52:8080/
+
+#Authetntication
+now jenkins should access my github repo for that create ssh pub key on ec2 > ssh-keygen
+copy pub key to github (means github has public access to  connect to my instance)
+
+#Integration of jenkins and github
+new item > name of app > freestyle (for test)
+(For testing created one public repo on github with same flask app) https://github.com/jyotsnavish/flask-app-jenkins-cicd
+
+Credentials > kind:ssh username with private key > id:github-jenkins > username:ubuntu > enter private key > save item
+Build now > console output 
+
+#Execute the app
+On Ec2 Ubuntu > cd /var/lib/jenkins/workspace/Flask-App-Project 
+install the dependencies for running the app
+apt install python3
+python3 --version
+apt install pip
+pip --version
+pip install flask
+flask --version
+
+python3 main.py (running on port 5000)
+
+Expose 5000 port in AWS SG for all
+browser > http://public_ip_server:5000/
+
+
+#building docker image
+cd /var/lib/jenkins/workspace/Flask-App-Project 
+docker build -t flask-app:v1 .   (As already my dockerfile is present)
+docker run -it --name flask-app -p 5000:5000 -d flask-app:v1
+browser > http://public_ip_server:5000/
+
+#kill the container
+docker kill container_id
+
+#Go to Jenkins job
+Build Steps > Shell > Add docker build and docker run command 
+{
+docker build -t flask-app:v1 .
+docker run -it --name flask-app -p 5000:5000 -d flask-app:v1
+}
+
+Build now 
+
+
+Error1 : Got permission denied while trying to connect to the Docker daemon socket at unix:///var/run/docker.sock: Post 
+Solution:
+sudo usermod -a -G docker jenkins
+systemctl restart jenkins.service
+
+Error2: Error response from daemon: Conflict. The container name "/flask-app" is already in use by container
+Solution > got to server > docker rm container_name -flask
+
+
+#Automatic jenkins pipeline gets executed when code is deployed on github
+
+#webhook
+Github >> webhook >> jenkins (any changes in github send a trigger to jenkins)
+
+Install Plugin > Manage Jenkins > Available Plugin > jenkins integration > install it
+
+#configure webhook
+github and jenkins should get connected (gpg key should be there on github)
+
+port 8080 is only accesible form my ip > github should be able to access it > AWS SG port 8080 anywhere
+
+Github > repo > setting of repo > webhook > url : jenkins url (http://18.234.255.52:8080/github-webhook/) > content-type: application/json
+Once you get the tick > means webhook intgeration with jenkins is successful
+
+Jenkins  job >  configure >  build trigger > GitHub hook trigger for GITScm polling 
+
+#Testing
+DO some change in file (I changes in echo.html)
+On jenkins build is automatically triggered without any manual interaction.

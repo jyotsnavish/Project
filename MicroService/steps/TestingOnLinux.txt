@@ -1,0 +1,88 @@
+Ubuntu 20.04 > instance_type = t2.large
+git clone https://github.com/jyotsnavish/Projects.git
+jyotsnavish
+PAT (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)
+
+#Docker Installation
+sudo apt-get update
+sudo apt-get install \
+    ca-certificates \
+    curl \
+    gnupg
+sudo mkdir -m 0755 -p /etc/apt/keyrings
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+echo \
+  "deb [arch="$(dpkg --print-architecture)" signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+  "$(. /etc/os-release && echo "$VERSION_CODENAME")" stable" | \
+  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+sudo apt-get update
+sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+
+#Installation Docker-compose
+sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+sudo chmod +x /usr/local/bin/docker-compose
+docker-compose --version
+
+#Docker-hub
+create repo
+docker tag microservice_frontend-svc:latest jyotsnavish/flask-microservice:front
+docker tag microservice_user-svc:latest jyotsnavish/flask-microservice:user
+docker tag microservice_book-svc:latest jyotsnavish/flask-microservice:book
+docker tag microservice_order-svc:latest jyotsnavish/flask-microservice:order
+
+docker login
+username and password
+docker push jyotsnavish/flask-microservice:front
+docker push jyotsnavish/flask-microservice:book
+docker push jyotsnavish/flask-microservice:order
+docker push jyotsnavish/flask-microservice:user
+
+
+********************DID NOT WORK*************************
+#minikube
+curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+sudo install minikube-linux-amd64 /usr/local/bin/minikube
+minikube version
+#kubectl
+curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+kubectl version --client
+kubectl cluster-info
+***************************************************
+
+GKE
+mkdir book-store
+cd book-store
+kubectl create ns book-store
+kubectl apply -f deployment.yaml
+
+####Kind setup on Ubuntu#### https://cloudyuga.guru/hands_on_lab/kind-k8s
+apt-get update
+apt install docker.io -y
+docker --version
+curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
+echo "deb https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee -a /etc/apt/sources.list.d/kubernetes.list
+sudo apt-get update
+sudo apt-get install -y kubectl
+
+curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.11.1/kind-linux-amd64
+chmod +x ./kind
+mv ./kind /usr/local/bin/kind
+kind version
+kind create cluster
+kind get clusters
+kubectl get nodes
+kubectl cluster-info --context kind-kind
+kubectl version
+kubectl get pods
+kubectl create ns test
+vi deployment.yaml
+kubectl apply -f deployment.yaml -n test
+kubectl get pods -n test
+kubectl get svc -n test
+kubectl port-forward service/frontend-svc-c 5000:5000 -n test
+
+#Helm
+wget https://get.helm.sh/helm-v3.9.3-linux-amd64.tar.gz
+tar xvf helm-v3.9.3-linux-amd64.tar.gz
+sudo mv linux-amd64/helm /usr/local/bin

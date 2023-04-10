@@ -1,0 +1,148 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend-svc-c
+spec:
+  selector:
+    matchLabels:
+      app: frontend-svc-c
+  template:
+    metadata:
+      labels:
+        app: frontend-svc-c
+    spec:
+      containers:
+      
+      - name: frontend-svc-c
+        image: jyotsnavish/flask-microservice:front
+        imagePullPolicy: Always
+        resources:
+          limits:
+            cpu: 100m
+            memory: 72Mi
+        ports:
+        - containerPort: 5000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend-svc-c
+spec:
+  type: LoadBalancer
+  selector:
+    app: frontend-svc-c
+  ports:
+  - protocol: TCP
+    port: 5000
+    targetPort: 5000
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: order-svc-c
+spec:
+  selector:
+    matchLabels:
+      app: order-svc-c
+  template:
+    metadata:
+      labels:
+        app: order-svc-c
+    spec:
+      containers:
+      - name: order-svc-c
+        image: jyotsnavish/flask-microservice:order
+        imagePullPolicy: Always
+        resources:
+          limits:
+            cpu: 100m
+            memory: 72Mi
+        ports:
+        - containerPort: 5002
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: order-svc-c
+spec:
+  type: ClusterIP
+  selector:
+    app: order-svc-c
+  ports:
+  - protocol: TCP
+    port: 5002
+    targetPort: 5002
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: book-svc-c
+spec:
+  selector:
+    matchLabels:
+      app: book-svc-c
+  template:
+    metadata:
+      labels:
+        app: book-svc-c
+    spec:
+      containers:
+      - name: book-svc-c
+        image: jyotsnavish/flask-microservice:book
+        imagePullPolicy: Always
+        resources:
+          limits:
+            cpu: 100m
+            memory: 72Mi
+        ports:
+        - containerPort: 5001
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: book-svc-c
+spec:
+  type: ClusterIP
+  selector:
+    app: book-svc-c
+  ports:
+  - protocol: TCP
+    port: 5001
+    targetPort: 5001
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user-svc-c
+spec:
+  selector:
+    matchLabels:
+      app: user-svc-c
+  template:
+    metadata:
+      labels:
+        app: user-svc-c
+    spec:
+      containers:
+      - name: user-svc-c
+        image: jyotsnavish/flask-microservice:user
+        imagePullPolicy: Always
+        resources:
+          limits:
+            cpu: 100m
+            memory: 72Mi
+        ports:
+        - containerPort: 5003
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: user-svc-c
+spec:
+  type: ClusterIP
+  selector:
+    app: user-svc-c
+  ports:
+  - protocol: TCP
+    port: 5003
+    targetPort: 5003
