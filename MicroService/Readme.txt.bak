@@ -164,24 +164,3 @@ kubectl apply -f deployment.yaml -n test
 kubectl get pods -n test
 kubectl get svc -n test
 kubectl port-forward service/frontend-svc-c 5000:5000 -n test
-
-***Helm****
-choco install kubernetes-helm
-
-creating and running via helm chart
-pre-requisite:
-docker-dekstop should be running
-
-cd frontend (for each service)
-helm create helm-chart
-edit the required files as per services
-helm lint helm-chart
-
-cd Microservice (for each service)
-helm install frontend .\frontend\helm-chart\
-
-kubectl get pods
-kubectl get svc
-kubectl port-forward service/frontend-helm-chart 5000:5000
-browser > 127.0.0.1:5000
-

@@ -1,0 +1,17 @@
+image:
+  repository: jyotsnavish/flask-microservice:front
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: ""
+  
+  
+service:
+  type: LoadBalancer
+  port: 5000
+  targetPort: 5000
+  
+containers:
+  name: frontend-svc-c
+  resources:
+    cpu: 100m
+    memory: 72Mi

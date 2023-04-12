@@ -1,0 +1,17 @@
+image:
+  repository: jyotsnavish/flask-microservice:order
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: ""
+  
+  
+service:
+  type: ClusterIP
+  port: 5002
+  targetPort: 5002
+  
+containers:
+  name: order-svc-c
+  resources:
+    cpu: 100m
+    memory: 72Mi

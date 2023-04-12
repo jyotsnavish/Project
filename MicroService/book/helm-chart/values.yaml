@@ -1,0 +1,17 @@
+image:
+  repository: jyotsnavish/flask-microservice:book
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: ""
+  
+  
+service:
+  type: ClusterIP
+  port: 5001
+  targetPort: 5001
+  
+containers:
+  name: book-svc-c
+  resources:
+    cpu: 100m
+    memory: 72Mi

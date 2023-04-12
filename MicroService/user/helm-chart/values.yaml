@@ -1,0 +1,17 @@
+image:
+  repository: jyotsnavish/flask-microservice:user
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: ""
+  
+  
+service:
+  type: ClusterIP
+  port: 5003
+  targetPort: 5003
+  
+containers:
+  name: user-svc-c
+  resources:
+    cpu: 100m
+    memory: 72Mi
