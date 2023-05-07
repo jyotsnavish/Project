@@ -1,6 +1,6 @@
 Microservice Application Using Python Flask > https://github.com/eupendra/book_store_microservice
 
-***USER****
+User service > 
 User API - end points
 /api/user/all - GET
 /api/user/create - POST
@@ -9,29 +9,22 @@ User API - end points
 /api/user/<username>/exists - GET
 /api/user/ - GET logged in user
 
-***Book****
-
+Book service >
 Book API - enpoints
 /api/book/all - GET
 /api/book/create - POST
 /api/book/<slug> - GET
 
-***Order****
-
+Order service >
 Order API - Endpoints
 /api/order/ - GET
 /api/order/all - GET
 /api/order/add-item - POST
 /api/order/checkout - POST
 			
-****FRONTEND****
-pip install flask flask-login flask-bootstrap flask-wtf wtform
+Frontend service
 
-user-svc-c
-book-svc-c
-order-svc-c
-
-****Deployment using Docker****
+***Deployment using Docker***
 docker-compose -f docker-compose.yml build
 docker-compose -f docker-compose.yml up -d
 docker images
